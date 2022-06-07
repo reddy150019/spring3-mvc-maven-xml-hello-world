@@ -1,0 +1,23 @@
+pipeline{
+  agent any
+    tools{
+      maven "maven3"
+	  }
+      stages{
+        stage('get scm'){
+          steps{
+            git credentialsId: 'github_credentials', url: 'https://github.com/reddy150019/spring3-mvc-maven-xml-hello-world.git'
+            }
+        }
+        stage('build'){
+          steps{
+           sh 'mvn package'
+           }
+        }
+		 stage('deploy') {
+            steps {
+		      sh "curl -v -u admin:admin -T  /var/lib/jenkins/workspace/first-pipeline/target/spring3-mvc-maven-xml-hello-world-1.0-SNAPSHOT 'http://13.233.165.70:8181//manager/text/deploy?path=/jenkins_pipeline1&update=true'"
+			}
+        }
+   }
+}
